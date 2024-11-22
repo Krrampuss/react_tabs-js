@@ -1,26 +1,35 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import cn from 'classnames';
 
 export const Tabs = ({ tabs, activeTabId, onTabSelected }) => {
-  const activeTab = tabs.find(tab => activeTabId === tab.id) || tabs[0];
+  const activeTab = tabs.find(tab => tab.id === activeTabId) || tabs[0];
 
   return (
     <div data-cy="TabsComponent">
       <div className="tabs is-boxed">
         <ul>
-          {tabs.map(tab => (
-            <li
-              key={tab.id}
-              data-cy="Tab"
-              className={cn({ 'is-active': tab.id === activeTab.id })}
-              onClick={() => tab.id !== activeTabId && onTabSelected(tab.id)}
-            >
-              <a href={`#${tab.id}`} data-cy="TabLink">
-                {tab.title}
-              </a>
-            </li>
-          ))}
+          {tabs.map(({ id: TabId, title: tabTitle }) => {
+            const isActiveTab = activeTab.id === TabId;
+
+            return (
+              <li
+                key={TabId}
+                data-cy="Tab"
+                className={cn({ 'is-active': isActiveTab })}
+              >
+                <a
+                  href={`#${TabId}`}
+                  data-cy="TabLink"
+                  onClick={() => {
+                    if (!isActiveTab) {
+                      onTabSelected(TabId);
+                    }
+                  }}
+                >
+                  {tabTitle}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </div>
 
